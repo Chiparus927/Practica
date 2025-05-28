@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Motors</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Check if user is logged in
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'auth.html';
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <h3>Categorii Auto</h3>
+    <ul>
+      <li><a href="#mercedes">Mercedes-Benz</a></li>
+      <li><a href="#bmw">BMW</a></li>
+      <li><a href="#audi">Audi</a></li>
+      <li><a href="#vw">Volkswagen</a></li>
+      <li><a href="#porsche">Porsche</a></li>
+      <li><a href="#lexus">Lexus</a></li>
+      <li><a href="#jaguar">Jaguar</a></li>
+      <li><a href="#landrover">Land Rover</a></li>
+      <li><a href="#maserati">Maserati</a></li>
+    </ul>
+  </div>
+
+  <header>
+    <h1>Elite Motors</h1>
+    <nav>
+      <div class="nav-buttons">
+        <button onclick="toggleCart()">Coș Cumpărături</button>
+        <button onclick="logout()" class="logout-btn">Deconectare</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="products">
+      <div id="mercedes" class="product">
+        <img src="photo_2025-05-26_11-38-23.jpg" alt="Mercedes">
+        <h2>Mercedes-Benz GLE350d</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 286 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 45.000 km</p>
+          <p><strong>Cutie:</strong> Automată 9G-Tronic</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 19.999 €</p>
+        <button onclick="addToCart('Mercedes-Benz GLE350d', 19.999)">Adaugă în coș</button>
+      </div>
+      <div id="mercedes" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8i_OzH5_UrHhV-es7FMObjecD9zoxGryMdw&s" alt="Mercedes">
+        <h2>Mercedes-Benz S-Class</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Benzina</p>
+          <p><strong>Putere:</strong> 435 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată 9G-Tronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 85.000 €</p>
+        <button onclick="addToCart('Mercedes-Benz S-Class', 85000)">Adaugă în coș</button>
+      </div>
+      <div id="mercedes" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk1-MZ_fiZxsXbUk4ApNEySfRPI9CohXroUA&s" alt="Mercedes">
+        <h2>Mercedes-AMG GT</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 4.0L V8 Biturbo</p>
+          <p><strong>Putere:</strong> 585 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 15.000 km</p>
+          <p><strong>Cutie:</strong> Automată AMG Speedshift</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 120.000 €</p>
+        <button onclick="addToCart('Mercedes-AMG GT', 120000)">Adaugă în coș</button>
+      </div>
+      <div id="mercedes" class="product">
+        <img src="https://i.simpalsmedia.com/999.md/BoardImages/900x900/1c3ac2fa4132c652679c68f86da89d17.jpg" alt="Mercedes">
+        <h2>Mercedes-Benz G-Class</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 4.0L V8 Biturbo</p>
+          <p><strong>Putere:</strong> 585 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 20.000 km</p>
+          <p><strong>Cutie:</strong> Automată 9G-Tronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 150.000 €</p>
+        <button onclick="addToCart('Mercedes-Benz G-Class', 150000)">Adaugă în coș</button>
+      </div>
+      <div id="bmw" class="product">
+        <img src="photo_2025-05-26_11-36-27.jpg" alt="BMW">
+        <h2>BMW X5 xDrive30d</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 265 CP</p>
+          <p><strong>An:</strong> 2019</p>
+          <p><strong>Kilometraj:</strong> 50.000 km</p>
+          <p><strong>Cutie:</strong> Automată Steptronic</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 14.999 €</p>
+        <button onclick="addToCart('BMW X5', 14.999)">Adaugă în coș</button>
+      </div>
+      <div id="bmw" class="product">
+        <img src="photo_2025-05-26_11-43-36.jpg" alt="BMW">
+        <h2>BMW 540i G30 M Paket</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Benzina</p>
+          <p><strong>Putere:</strong> 340 CP</p>
+          <p><strong>An:</strong> 2019</p>
+          <p><strong>Kilometraj:</strong> 55.000 km</p>
+          <p><strong>Cutie:</strong> Automată Steptronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 17.500 €</p>
+        <button onclick="addToCart('BMW 540i', 17.500)">Adaugă în coș</button>
+      </div>
+      <div id="bmw" class="product">
+        <img src="https://blog.consumerguide.com/wp-content/uploads/sites/2/2021/09/aIMG_5370.jpg" alt="BMW">
+        <h2>BMW M4 Competition Coupe</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Benzina</p>
+          <p><strong>Putere:</strong> 510 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 18.000 km</p>
+          <p><strong>Cutie:</strong> Automată M Steptronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 95.000 €</p>
+        <button onclick="addToCart('BMW M4 Competition', 95000)">Adaugă în coș</button>
+      </div>
+      <div id="bmw" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGJVOx2a1ta_5zbe7SQZT2P92TYAe0UJQXWA&s" alt="BMW">
+        <h2>BMW i8</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 1.5L + Electric</p>
+          <p><strong>Putere:</strong> 374 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 22.000 km</p>
+          <p><strong>Cutie:</strong> Automată Steptronic</p>
+          <p><strong>Combustibil:</strong> Hibrid</p>
+        </div>
+        <p class="price">Preț: 110.000 €</p>
+        <button onclick="addToCart('BMW i8', 110000)">Adaugă în coș</button>
+      </div>
+      <div id="bmw" class="product">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/2019_BMW_740Li_Automatic_facelift_3.0.jpg/1200px-2019_BMW_740Li_Automatic_facelift_3.0.jpg" alt="BMW">
+        <h2>BMW 7 Series</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 286 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 35.000 km</p>
+          <p><strong>Cutie:</strong> Automată Steptronic</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 85.000 €</p>
+        <button onclick="addToCart('BMW 7 Series', 85000)">Adaugă în coș</button>
+      </div>
+      <div id="audi" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsFfMkSp2WIfOlqr52tFDfFCVcq9-7lnH4Eg&s" alt="Audi">
+        <h2>Audi Q7 3.0 TDI</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 286 CP</p>
+          <p><strong>An:</strong> 2019</p>
+          <p><strong>Kilometraj:</strong> 48.000 km</p>
+          <p><strong>Cutie:</strong> Automată Tiptronic</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 22.500 €</p>
+        <button onclick="addToCart('Audi Q7', 22500)">Adaugă în coș</button>
+      </div>
+      <div id="audi" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/08/x/b/car_73129axcxpfmttph628hlsadrl7a.jpg" alt="Audi">
+        <h2>Audi RS6 Avant</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 4.0L V8 Biturbo</p>
+          <p><strong>Putere:</strong> 600 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 20.000 km</p>
+          <p><strong>Cutie:</strong> Automată S Tronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 115.000 €</p>
+        <button onclick="addToCart('Audi RS6 Avant', 115000)">Adaugă în coș</button>
+      </div>
+      <div id="audi" class="product">
+        <img src="https://prod.pictures.autoscout24.net/listing-images/316e9e32-c9f0-4d44-80f1-e9a203beb252_78d7cb3b-86fc-4524-8a5a-46fd5405b2f9.jpg" alt="Audi">
+        <h2>Audi R8 V10</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 5.2L V10</p>
+          <p><strong>Putere:</strong> 620 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 5.000 km</p>
+          <p><strong>Cutie:</strong> Automată S Tronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 150.000 €</p>
+        <button onclick="addToCart('Audi R8 V10', 150000)">Adaugă în coș</button>
+      </div>
+      <div id="audi" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjGoP0LriQPi6vgBsL3oZO54cYVlursb5hTw&s" alt="Audi">
+        <h2>Audi e-tron GT</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> Electric Dual Motor</p>
+          <p><strong>Putere:</strong> 476 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 12.000 km</p>
+          <p><strong>Cutie:</strong> Automată</p>
+          <p><strong>Combustibil:</strong> Electric</p>
+        </div>
+        <p class="price">Preț: 95.000 €</p>
+        <button onclick="addToCart('Audi e-tron GT', 95000)">Adaugă în coș</button>
+      </div>
+      <div id="audi" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEDrX83rZqXxQnhq_DHIhFaT0TsmbasgeCA&s" alt="Audi">
+        <h2>Audi A8 L</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L V6</p>
+          <p><strong>Putere:</strong> 340 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată Tiptronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 90.000 €</p>
+        <button onclick="addToCart('Audi A8 L', 90000)">Adaugă în coș</button>
+      </div>
+      <div id="vw" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/10/e/u/car_45549hgk5pxor69ab557v7tms7a4.jpg" alt="VW">
+        <h2>Volkswagen Passat</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Diesel</p>
+          <p><strong>Putere:</strong> 190 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 40.000 km</p>
+          <p><strong>Cutie:</strong> Automată DSG</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 25.000 €</p>
+        <button onclick="addToCart('Volkswagen Passat', 25000)">Adaugă în coș</button>
+      </div>
+      <div id="vw" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/12/p/b/car_656219dtuy6qxikecj3muvl8iug5.jpg" alt="VW">
+        <h2>Volkswagen Touareg</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 286 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 30.000 km</p>
+          <p><strong>Cutie:</strong> Automată Tiptronic</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 45.000 €</p>
+        <button onclick="addToCart('Volkswagen Touareg', 45000)">Adaugă în coș</button>
+      </div>
+      <div id="vw" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/04/k/k/car_60964dpdiefscyzjkz9xqfu9oq8.jpeg" alt="VW">
+        <h2>Volkswagen Arteon</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Benzina</p>
+          <p><strong>Putere:</strong> 280 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 35.000 km</p>
+          <p><strong>Cutie:</strong> Automată DSG</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 35.000 €</p>
+        <button onclick="addToCart('Volkswagen Arteon', 35000)">Adaugă în coș</button>
+      </div>
+      <div id="vw" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/06/c/h/car_7123353x1riuepndoydyrkouzj3.jpeg" alt="VW">
+        <h2>Volkswagen ID.4</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> Electric</p>
+          <p><strong>Putere:</strong> 204 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 15.000 km</p>
+          <p><strong>Cutie:</strong> Automată</p>
+          <p><strong>Combustibil:</strong> Electric</p>
+        </div>
+        <p class="price">Preț: 40.000 €</p>
+        <button onclick="addToCart('Volkswagen ID.4', 40000)">Adaugă în coș</button>
+      </div>
+      <div id="vw" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/10/e/r/car_44755r1hnehcnvh14b4i84d75nce.jpg" alt="VW">
+        <h2>Volkswagen Golf R</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Benzina</p>
+          <p><strong>Putere:</strong> 320 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată DSG</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 45.000 €</p>
+        <button onclick="addToCart('Volkswagen Golf R', 45000)">Adaugă în coș</button>
+      </div>
+      <div id="porsche" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/02/u/d/car_22167567rn2x4xp6i37rdmvkgmd5.jpg" alt="Porsche">
+        <h2>Porsche 911 Turbo S</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.8L Benzina</p>
+          <p><strong>Putere:</strong> 650 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 8.000 km</p>
+          <p><strong>Cutie:</strong> Automată PDK</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 90.000 €</p>
+        <button onclick="addToCart('Porsche 911', 90000)">Adaugă în coș</button>
+      </div>
+      <div id="porsche" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/10/x/q/car_62097vx5h8p3rxzi56njdon47sh7.jpg" alt="Porsche">
+        <h2>Porsche Cayenne</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L V6</p>
+          <p><strong>Putere:</strong> 340 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 28.000 km</p>
+          <p><strong>Cutie:</strong> Automată Tiptronic</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 85.000 €</p>
+        <button onclick="addToCart('Porsche Cayenne', 85000)">Adaugă în coș</button>
+      </div>
+      <div id="porsche" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/12/x/o/car_6517639754qukq9upvzlc8qf3aa.jpeg" alt="Porsche">
+        <h2>Porsche Taycan</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> Electric Dual Motor</p>
+          <p><strong>Putere:</strong> 476 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 12.000 km</p>
+          <p><strong>Cutie:</strong> Automată</p>
+          <p><strong>Combustibil:</strong> Electric</p>
+        </div>
+        <p class="price">Preț: 95.000 €</p>
+        <button onclick="addToCart('Porsche Taycan', 95000)">Adaugă în coș</button>
+      </div>
+      <div id="porsche" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/10/d/h/car_612665haap5yei4s5ig4rz1b4j9o.jpg" alt="Porsche">
+        <h2>Porsche Panamera</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.9L V6</p>
+          <p><strong>Putere:</strong> 330 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 22.000 km</p>
+          <p><strong>Cutie:</strong> Automată PDK</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 100.000 €</p>
+        <button onclick="addToCart('Porsche Panamera', 100000)">Adaugă în coș</button>
+      </div>
+      <div id="porsche" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2025/05/s/u/car_60849e5goxi3nq34fsymdlmz98ki.jpg" alt="Porsche">
+        <h2>Porsche Macan</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Benzina</p>
+          <p><strong>Putere:</strong> 265 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 35.000 km</p>
+          <p><strong>Cutie:</strong> Automată PDK</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 65.000 €</p>
+        <button onclick="addToCart('Porsche Macan', 65000)">Adaugă în coș</button>
+      </div>
+      <div id="lexus" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/10/z/q/car_63329rhn2ngujc68yjd4gkfgfltj.jpg" alt="Lexus">
+        <h2>Lexus RX 450h</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.5L V6 + Electric</p>
+          <p><strong>Putere:</strong> 313 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 38.000 km</p>
+          <p><strong>Cutie:</strong> Automată CVT</p>
+          <p><strong>Combustibil:</strong> Hibrid</p>
+        </div>
+        <p class="price">Preț: 45.000 €</p>
+        <button onclick="addToCart('Lexus RX 450h', 45000)">Adaugă în coș</button>
+      </div>
+      <div id="lexus" class="product">
+        <img src="https://frankfurt.apollo.olxcdn.com/v1/files/nnux0fg8ttlj3-RO/image;s=1360x1360" alt="Lexus">
+        <h2>Lexus LC 500</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 5.0L V8</p>
+          <p><strong>Putere:</strong> 471 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 15.000 km</p>
+          <p><strong>Cutie:</strong> Automată 10 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 85.000 €</p>
+        <button onclick="addToCart('Lexus LC 500', 85000)">Adaugă în coș</button>
+      </div>
+      <div id="lexus" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV6IFbtK3mQ-82Mx5BNcVy_NzsSPC3AT43Ww&s" alt="Lexus">
+        <h2>Lexus LX 600</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.5L V6 Twin-Turbo</p>
+          <p><strong>Putere:</strong> 409 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 10.000 km</p>
+          <p><strong>Cutie:</strong> Automată 10 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 95.000 €</p>
+        <button onclick="addToCart('Lexus LX 600', 95000)">Adaugă în coș</button>
+      </div>
+      <div id="lexus" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWZ1uHF68h4Ds2d-EC-_zHuTKgz_bDVNUIvg&s" alt="Lexus">
+        <h2>Lexus IS 500</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 5.0L V8</p>
+          <p><strong>Putere:</strong> 472 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 20.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 55.000 €</p>
+        <button onclick="addToCart('Lexus IS 500', 55000)">Adaugă în coș</button>
+      </div>
+      <div id="lexus" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2ns6VOWzuebuuL006xPltfYg1pIQgnbVTcQ&s" alt="Lexus">
+        <h2>Lexus NX 350h</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.5L + Electric</p>
+          <p><strong>Putere:</strong> 243 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 12.000 km</p>
+          <p><strong>Cutie:</strong> Automată CVT</p>
+          <p><strong>Combustibil:</strong> Hibrid</p>
+        </div>
+        <p class="price">Preț: 40.000 €</p>
+        <button onclick="addToCart('Lexus NX 350h', 40000)">Adaugă în coș</button>
+      </div>
+      <div id="jaguar" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2025/04/e/j/car_63727j2jbddvqzf57unh2r6nt7p6.jpg" alt="Jaguar">
+        <h2>Jaguar F-Pace</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Diesel</p>
+          <p><strong>Putere:</strong> 204 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 42.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 52.000 €</p>
+        <button onclick="addToCart('Jaguar F-Pace', 52000)">Adaugă în coș</button>
+      </div>
+      <div id="jaguar" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2025/02/u/o/car_393354jdsf528eeazodm9l7r6rzh.jpg" alt="Jaguar">
+        <h2>Jaguar F-Type</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 5.0L V8 Supercharged</p>
+          <p><strong>Putere:</strong> 575 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 18.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 75.000 €</p>
+        <button onclick="addToCart('Jaguar F-Type', 75000)">Adaugă în coș</button>
+      </div>
+      <div id="jaguar" class="product">
+        <img src="https://cipauto.md/storage/uploads/Y5eJcWWVNACV1VPNfhJcYkuxCChJl1lqJMd3d6Gj.jpg" alt="Jaguar">
+        <h2>Jaguar I-Pace</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> Electric Dual Motor</p>
+          <p><strong>Putere:</strong> 400 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată</p>
+          <p><strong>Combustibil:</strong> Electric</p>
+        </div>
+        <p class="price">Preț: 65.000 €</p>
+        <button onclick="addToCart('Jaguar I-Pace', 65000)">Adaugă în coș</button>
+      </div>
+      <div id="jaguar" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/11/k/u/car_64694o47vxzj2fu68euyi2ghq7gu.jpg" alt="Jaguar">
+        <h2>Jaguar XF</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Diesel</p>
+          <p><strong>Putere:</strong> 204 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 45.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 45.000 €</p>
+        <button onclick="addToCart('Jaguar XF', 45000)">Adaugă în coș</button>
+      </div>
+      <div id="jaguar" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2025/05/r/v/car_80234n4sh2m93f3pyrq6db77y1s9.jpg" alt="Jaguar">
+        <h2>Jaguar E-Pace</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Diesel</p>
+          <p><strong>Putere:</strong> 180 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 38.000 km</p>
+          <p><strong>Cutie:</strong> Automată 9 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 35.000 €</p>
+        <button onclick="addToCart('Jaguar E-Pace', 35000)">Adaugă în coș</button>
+      </div>
+      <div id="landrover" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/04/u/m/car_62290lgysopjxk6fzueh28rh4cap.jpg" alt="Land Rover">
+        <h2>Land Rover Range Rover</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 300 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 85.000 €</p>
+        <button onclick="addToCart('Land Rover Range Rover', 85000)">Adaugă în coș</button>
+      </div>
+      <div id="landrover" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMSaG5KSfbLWSGlGDeB0LGL7gHoyS1Kn-MHw&s" alt="Land Rover">
+        <h2>Land Rover Defender</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 300 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 22.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 65.000 €</p>
+        <button onclick="addToCart('Land Rover Defender', 65000)">Adaugă în coș</button>
+      </div>
+      <div id="landrover" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlRSv6sOy3zGf5kYnaHOjaQKnSwytN8jS2tg&s" alt="Land Rover">
+        <h2>Land Rover Discovery</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 300 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 35.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 55.000 €</p>
+        <button onclick="addToCart('Land Rover Discovery', 55000)">Adaugă în coș</button>
+      </div>
+      <div id="landrover" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZMOL9W2xN_cP6PwZUWnd_SH-wv8Moetay8A&s" alt="Land Rover">
+        <h2>Range Rover Velar</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Diesel</p>
+          <p><strong>Putere:</strong> 204 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 40.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 60.000 €</p>
+        <button onclick="addToCart('Range Rover Velar', 60000)">Adaugă în coș</button>
+      </div>
+      <div id="landrover" class="product">
+        <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/07/o/a/car_72002cgszj822hi5soi9ii6b2agf.jpg" alt="Land Rover">
+        <h2>Range Rover Sport</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L Diesel</p>
+          <p><strong>Putere:</strong> 300 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 28.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Diesel</p>
+        </div>
+        <p class="price">Preț: 75.000 €</p>
+        <button onclick="addToCart('Range Rover Sport', 75000)">Adaugă în coș</button>
+      </div>
+      <div id="maserati" class="product">
+        <img src="https://prod.pictures.autoscout24.net/listing-images/b3256739-a3c0-4164-b4b4-cee5cb1a9f65_e985d9b9-336a-43df-b6a8-7d968fc6b20a.jpg" alt="Maserati">
+        <h2>Maserati Levante</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L V6</p>
+          <p><strong>Putere:</strong> 350 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 25.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 75.000 €</p>
+        <button onclick="addToCart('Maserati Levante', 75000)">Adaugă în coș</button>
+      </div>
+      <div id="maserati" class="product">
+        <img src="https://piataauto.md/_i/ann/bigs/20160845042-xbT1FNlyFFHJDV.jpg" alt="Maserati">
+        <h2>Maserati GranTurismo</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 4.7L V8</p>
+          <p><strong>Putere:</strong> 460 CP</p>
+          <p><strong>An:</strong> 2020</p>
+          <p><strong>Kilometraj:</strong> 15.000 km</p>
+          <p><strong>Cutie:</strong> Automată 6 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 120.000 €</p>
+        <button onclick="addToCart('Maserati GranTurismo', 120000)">Adaugă în coș</button>
+      </div>
+      <div id="maserati" class="product">
+        <img src="https://prod.pictures.autoscout24.net/listing-images/3eeaefb7-79b4-430c-ae8b-cf327ae2294f_b9c188fb-d4d5-4d94-9d87-f55694133442.jpg" alt="Maserati">
+        <h2>Maserati MC20</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L V6 Twin-Turbo</p>
+          <p><strong>Putere:</strong> 630 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 5.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 180.000 €</p>
+        <button onclick="addToCart('Maserati MC20', 180000)">Adaugă în coș</button>
+      </div>
+      <div id="maserati" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiKNrrmm6yzVW_U1IUWdeng--p5YyXclJQJQ&s" alt="Maserati">
+        <h2>Maserati Quattroporte</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 3.0L V6 Twin-Turbo</p>
+          <p><strong>Putere:</strong> 350 CP</p>
+          <p><strong>An:</strong> 2021</p>
+          <p><strong>Kilometraj:</strong> 20.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 110.000 €</p>
+        <button onclick="addToCart('Maserati Quattroporte', 110000)">Adaugă în coș</button>
+      </div>
+      <div id="maserati" class="product">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlqGFKli5S186FP513rWiMJzH_lanJcFujjg&s" alt="Maserati">
+        <h2>Maserati Grecale</h2>
+        <div class="car-specs">
+          <p><strong>Motor:</strong> 2.0L Benzina</p>
+          <p><strong>Putere:</strong> 300 CP</p>
+          <p><strong>An:</strong> 2022</p>
+          <p><strong>Kilometraj:</strong> 12.000 km</p>
+          <p><strong>Cutie:</strong> Automată 8 trepte</p>
+          <p><strong>Combustibil:</strong> Benzina</p>
+        </div>
+        <p class="price">Preț: 65.000 €</p>
+        <button onclick="addToCart('Maserati Grecale', 65000)">Adaugă în coș</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleCart()">&times;</span>
+      <h2>Coșul tău</h2>
+      <ul id="cartItems"></ul>
+      <p id="cartTotal"></p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="social-links">
+        <h3>Contactează-mă</h3>
+        <p class="social-note">Pentru mai multe informații, mă poți găsi pe:</p>
+        <div class="social-icons">
+          <a href="https://instagram.com/elite_motors" target="_blank" class="social-icon">
+            <i class="fab fa-instagram"></i>
+            <span>elite_motors</span>
+          </a>
+          <a href="https://facebook.com/your_username" target="_blank" class="social-icon">
+            <i class="fab fa-facebook"></i>
+            <span>elite_motors</span>
+          </a>
+          <a href="https://t.me/your_username" target="_blank" class="social-icon">
+            <i class="fab fa-telegram"></i>
+            <span>elite_motors</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-info">
+        <h3>Contact</h3>
+        <p><i class="fas fa-phone"></i> +373 60 123 456</p>
+        <p><i class="fas fa-envelope"></i> contact@elitemotors.md</p>
+        <p><i class="fas fa-map-marker-alt"></i> Strada Exemplu 123, Chișinău</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Elite Motors. Toate drepturile rezervate.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html> css:/* Resetări de bază */

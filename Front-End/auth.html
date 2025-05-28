@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autentificare - Elite Motors</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Login Form -->
+        <div class="auth-box login-box">
+            <h1>Autentificare</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="Introduceți email-ul">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Parolă</label>
+                    <input type="password" id="loginPassword" required placeholder="Introduceți parola">
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Ține-mă minte</label>
+                </div>
+                <button type="submit" class="auth-button">Autentificare</button>
+            </form>
+            <div class="form-footer">
+                <a href="#" class="forgot-password">Ai uitat parola?</a>
+            </div>
+        </div>
+
+        <!-- Vertical Line -->
+        <div class="vertical-line"></div>
+
+        <!-- Register Form -->
+        <div class="auth-box register-box">
+            <h1>Înregistrare</h1>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nume complet</label>
+                    <input type="text" id="registerName" required placeholder="Introduceți numele">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="Introduceți email-ul">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Parolă</label>
+                    <input type="password" id="registerPassword" required placeholder="Introduceți parola">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmă parola</label>
+                    <input type="password" id="confirmPassword" required placeholder="Reintroduceți parola">
+                </div>
+                <button type="submit" class="auth-button">Înregistrare</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html> 
