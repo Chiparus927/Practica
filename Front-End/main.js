@@ -1,0 +1,167 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificare autentificare
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const userSection = document.getElementById('userSection');
+    
+    if (isLoggedIn) {
+        const username = localStorage.getItem('username');
+        userSection.innerHTML = `
+            <span class="navbar-text me-3">Bine ai venit, ${username}!</span>
+            <button class="btn btn-outline-light" onclick="logout()">Deconectare</button>
+        `;
+    } else {
+        userSection.innerHTML = `
+            <a href="auth.html" class="btn btn-outline-light">Autentificare</a>
+        `;
+    }
+
+    // Încărcare mărci auto
+    loadBrands();
+    
+    // Încărcare anunțuri
+    loadListings();
+
+    // Event listeners
+    const brandSelect = document.getElementById('brand');
+    brandSelect.addEventListener('change', loadModels);
+
+    const filterForm = document.getElementById('filterForm');
+    filterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        loadListings();
+    });
+});
+
+async function loadBrands() {
+    try {
+        const response = await fetch('http://localhost/proiect/Back-End/api.php?action=get_brands');
+        const data = await response.json();
+        
+        if (data.success) {
+            const brandSelect = document.getElementById('brand');
+            data.brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand.id;
+                option.textContent = brand.name;
+                brandSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Eroare la încărcarea mărcilor:', error);
+    }
+}
+
+async function loadModels() {
+    const brandId = document.getElementById('brand').value;
+    const modelSelect = document.getElementById('model');
+    
+    // Resetare modele
+    modelSelect.innerHTML = '<option value="">Toate modelele</option>';
+    
+    if (!brandId) return;
+
+    try {
+        const response = await fetch(`http://localhost/proiect/Back-End/api.php?action=get_models&brand_id=${brandId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            data.models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+                modelSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Eroare la încărcarea modelelor:', error);
+    }
+}
+
+async function loadListings() {
+    const brandId = document.getElementById('brand').value;
+    const modelId = document.getElementById('model').value;
+    const priceMin = document.getElementById('priceMin').value;
+    const priceMax = document.getElementById('priceMax').value;
+
+    let url = 'http://localhost/proiect/Back-End/api.php?action=get_listings';
+    if (brandId) url += `&brand_id=${brandId}`;
+    if (modelId) url += `&model_id=${modelId}`;
+    if (priceMin) url += `&price_min=${priceMin}`;
+    if (priceMax) url += `&price_max=${priceMax}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.success) {
+            const container = document.getElementById('listingsContainer');
+            container.innerHTML = '';
+            
+            data.listings.forEach(listing => {
+                container.innerHTML += `
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">${listing.brand_name} ${listing.model_name} (${listing.year})</h5>
+                                <p class="card-text">
+                                    <strong>Preț:</strong> ${listing.price} €<br>
+                                    <strong>Kilometraj:</strong> ${listing.mileage} km<br>
+                                    <strong>Combustibil:</strong> ${listing.fuel_type}<br>
+                                    <strong>Transmisie:</strong> ${listing.transmission}<br>
+                                    <strong>Vânzător:</strong> ${listing.seller_name}
+                                </p>
+                                <p class="card-text">${listing.description}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="listing-details.html?id=${listing.id}" class="btn btn-primary">Vezi detalii</a>
+                                ${isLoggedIn ? `<button onclick="addToFavorites(${listing.id})" class="btn btn-outline-danger float-end">
+                                    <i class="bi bi-heart"></i>
+                                </button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Eroare la încărcarea anunțurilor:', error);
+    }
+}
+
+function logout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    window.location.href = 'auth.html';
+}
+
+async function addToFavorites(listingId) {
+    if (!localStorage.getItem('isLoggedIn')) {
+        alert('Trebuie să fiți autentificat pentru a adăuga la favorite!');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost/proiect/Back-End/api.php?action=add_favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: localStorage.getItem('userId'),
+                listing_id: listingId
+            })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            alert('Anunț adăugat la favorite!');
+        } else {
+            alert(data.message || 'Eroare la adăugarea la favorite!');
+        }
+    } catch (error) {
+        console.error('Eroare:', error);
+        alert('Eroare la adăugarea la favorite!');
+    }
+} 

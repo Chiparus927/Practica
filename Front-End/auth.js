@@ -8,42 +8,70 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html';
     }
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
+        const username = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-        const rememberMe = document.getElementById('rememberMe').checked;
 
-        // Here you would typically make an API call to your backend
-        console.log('Login attempt:', { email, password, rememberMe });
-        
-        // For demo purposes, just show a success message and redirect
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', email);
-        alert('Autentificare reușită!');
-        window.location.href = 'index.html';
+        try {
+            const response = await fetch(`http://localhost/proiect/Back-End/api.php?action=login&username=${username}&password=${password}`, {
+                method: 'GET'
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userId', data.user.id);
+                localStorage.setItem('username', data.user.username);
+                localStorage.setItem('email', data.user.email);
+                alert('Autentificare reușită!');
+                window.location.href = 'index.html';
+            } else {
+                alert('Username sau parolă incorecte!');
+            }
+        } catch (error) {
+            console.error('Eroare:', error);
+            alert('Eroare la autentificare!');
+        }
     });
 
-    registerForm.addEventListener('submit', (e) => {
+    registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = document.getElementById('registerName').value;
-        const email = document.getElementById('registerEmail').value;
+        const username = document.getElementById('registerEmail').value;
         const password = document.getElementById('registerPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
 
         if (password !== confirmPassword) {
             alert('Parolele nu coincid!');
             return;
         }
 
-        // Here you would typically make an API call to your backend
-        console.log('Register attempt:', { name, email, password });
-        
-        // For demo purposes, just show a success message and redirect
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userName', name);
-        alert('Înregistrare reușită!');
-        window.location.href = 'index.html';
+        try {
+            const response = await fetch('http://localhost/proiect/Back-End/api.php?action=register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    email: email,
+                    phone: phone
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Înregistrare reușită! Vă puteți autentifica.');
+                registerForm.reset();
+            } else {
+                alert(data.message || 'Eroare la înregistrare!');
+            }
+        } catch (error) {
+            console.error('Eroare:', error);
+            alert('Eroare la înregistrare!');
+        }
     });
 }); 
