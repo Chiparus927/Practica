@@ -1,0 +1,69 @@
+/* Stiluri generale */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+/* Card-uri anunțuri */
+.card {
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+
+.card-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.card-text {
+    color: #34495e;
+}
+
+/* Formular de filtrare */
+.form-label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52,152,219,.25);
+}
+
+/* Butoane */
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-outline-danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.btn-outline-danger:hover {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .col-md-3 {
+        margin-bottom: 20px;
+    }
+} 
