@@ -4,12 +4,16 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
 
+// Activăm afișarea erorilor pentru debug
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
 // Configurare bază de date
-$host = 'localhost';
+$host = 'localhost:3307';
 $dbname = 'piata_auto';
 $username = 'root';
 $password = '';
@@ -17,8 +21,16 @@ $password = '';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    error_log("Conexiune reușită la baza de date!");
 } catch(PDOException $e) {
-    die(json_encode(['success' => false, 'message' => 'Conexiune eșuată: ' . $e->getMessage()]));
+    error_log("Eroare de conexiune la baza de date: " . $e->getMessage());
+    die(json_encode([
+        'success' => false, 
+        'message' => 'Conexiune eșuată: ' . $e->getMessage(),
+        'error_info' => $e->errorInfo,
+        'host' => $host,
+        'dbname' => $dbname
+    ]));
 }
 
 // Funcție pentru login
@@ -26,41 +38,114 @@ function handleLogin($pdo) {
     $username = $_GET['username'] ?? '';
     $password = $_GET['password'] ?? '';
 
-    $stmt = $pdo->prepare('SELECT id, username, email FROM users WHERE username = ? AND password = ?');
-    $stmt->execute([$username, $password]);
-    
-    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    try {
+        $stmt = $pdo->prepare('SELECT id, username, email FROM users WHERE username = ? AND password = ?');
+        $stmt->execute([$username, $password]);
+        
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo json_encode([
+                'success' => true,
+                'user' => [
+                    'id' => $row['id'],
+                    'username' => $row['username'],
+                    'email' => $row['email']
+                ]
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Credențiale invalide']);
+        }
+    } catch(PDOException $e) {
         echo json_encode([
-            'success' => true,
-            'user' => [
-                'id' => $row['id'],
-                'username' => $row['username'],
-                'email' => $row['email']
-            ]
+            'success' => false, 
+            'message' => 'Eroare la autentificare: ' . $e->getMessage(),
+            'error_info' => $e->errorInfo
         ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Credențiale invalide']);
     }
 }
 
 // Funcție pentru register
 function handleRegister($pdo) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $username = $data['username'] ?? '';
-    $password = $data['password'] ?? '';
-    $email = $data['email'] ?? '';
+    // Citim datele trimise
+    $rawData = file_get_contents('php://input');
+    error_log("Date primite raw: " . $rawData);
+    $data = json_decode($rawData, true);
+
+    // Debug - afișăm datele primite
+    error_log("Date decodate: " . print_r($data, true));
+
+    // Verificăm dacă avem toate datele necesare
+    if (!isset($data['username']) || !isset($data['password']) || !isset($data['email'])) {
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Date incomplete',
+            'received_data' => $data,
+            'raw_data' => $rawData
+        ]);
+        return;
+    }
+
+    $username = $data['username'];
+    $password = $data['password'];
+    $email = $data['email'];
     $phone = $data['phone'] ?? null;
 
     try {
-        $stmt = $pdo->prepare('INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$username, $password, $email, $phone]);
-        echo json_encode(['success' => true]);
-    } catch(PDOException $e) {
-        if ($e->getCode() == 23000) {
-            echo json_encode(['success' => false, 'message' => 'Username-ul sau email-ul există deja!']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Eroare la înregistrare!']);
+        // Verificăm dacă username-ul există deja
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+        $stmt->execute([$username]);
+        if ($stmt->fetch()) {
+            echo json_encode(['success' => false, 'message' => 'Username-ul există deja!']);
+            return;
         }
+
+        // Verificăm dacă email-ul există deja
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            echo json_encode(['success' => false, 'message' => 'Email-ul există deja!']);
+            return;
+        }
+
+        // Inserăm utilizatorul nou
+        $stmt = $pdo->prepare('INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)');
+        
+        error_log("Încercare inserare cu valorile: username=$username, email=$email, phone=$phone");
+        
+        if (!$stmt->execute([$username, $password, $email, $phone])) {
+            throw new PDOException("Eroare la execuția query-ului");
+        }
+
+        $userId = $pdo->lastInsertId();
+        
+        // Verificăm dacă inserarea a reușit
+        if (!$userId) {
+            throw new PDOException("Nu s-a putut obține ID-ul utilizatorului nou");
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Utilizator înregistrat cu succes',
+            'user_id' => $userId
+        ]);
+
+    } catch(PDOException $e) {
+        error_log("Eroare SQL detaliată: " . $e->getMessage());
+        error_log("Cod eroare: " . $e->getCode());
+        error_log("SQL State: " . $e->errorInfo[0]);
+        error_log("Driver error code: " . $e->errorInfo[1]);
+        error_log("Driver error message: " . $e->errorInfo[2]);
+        
+        echo json_encode([
+            'success' => false,
+            'message' => 'Eroare la înregistrare: ' . $e->getMessage(),
+            'error_code' => $e->getCode(),
+            'error_info' => $e->errorInfo,
+            'debug_info' => [
+                'sql_state' => $e->errorInfo[0],
+                'driver_error_code' => $e->errorInfo[1],
+                'driver_error_message' => $e->errorInfo[2]
+            ]
+        ]);
     }
 }
 
@@ -137,29 +222,61 @@ function handleAddListing($pdo) {
 // Router pentru cereri
 $action = $_GET['action'] ?? '';
 
+error_log("Request primit: METHOD=" . $_SERVER['REQUEST_METHOD'] . ", ACTION=" . $action);
+
 switch($action) {
     case 'login':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             handleLogin($pdo);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Metoda HTTP incorectă pentru login. Trebuie să fie GET.',
+                'method_received' => $_SERVER['REQUEST_METHOD']
+            ]);
         }
         break;
     case 'register':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             handleRegister($pdo);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Metoda HTTP incorectă pentru register. Trebuie să fie POST.',
+                'method_received' => $_SERVER['REQUEST_METHOD']
+            ]);
         }
         break;
     case 'get_listings':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             handleGetListings($pdo);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Metoda HTTP incorectă pentru get_listings. Trebuie să fie GET.',
+                'method_received' => $_SERVER['REQUEST_METHOD']
+            ]);
         }
         break;
     case 'add_listing':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             handleAddListing($pdo);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Metoda HTTP incorectă pentru add_listing. Trebuie să fie POST.',
+                'method_received' => $_SERVER['REQUEST_METHOD']
+            ]);
         }
         break;
     default:
-        echo json_encode(['success' => false, 'message' => 'Acțiune invalidă']);
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Acțiune invalidă',
+            'received_action' => $action,
+            'request_method' => $_SERVER['REQUEST_METHOD'],
+            'available_actions' => ['login', 'register', 'get_listings', 'add_listing']
+        ]);
 }
 
 $pdo = null;

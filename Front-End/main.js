@@ -1,19 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificare autentificare
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const userSection = document.getElementById('userSection');
-    
-    if (isLoggedIn) {
-        const username = localStorage.getItem('username');
-        userSection.innerHTML = `
-            <span class="navbar-text me-3">Bine ai venit, ${username}!</span>
-            <button class="btn btn-outline-light" onclick="logout()">Deconectare</button>
-        `;
-    } else {
-        userSection.innerHTML = `
-            <a href="auth.html" class="btn btn-outline-light">Autentificare</a>
-        `;
-    }
+    initTheme();
+    updateUserSection();
 
     // Încărcare mărci auto
     loadBrands();
@@ -31,6 +18,24 @@ document.addEventListener('DOMContentLoaded', () => {
         loadListings();
     });
 });
+
+function updateUserSection() {
+    const userSection = document.getElementById('userSection');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (isLoggedIn) {
+        userSection.innerHTML = `
+            <button onclick="logout()" class="btn btn-danger btn-sm">Deconectare</button>
+        `;
+    } else {
+        userSection.innerHTML = `
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn btn-login">Autentificare</a>
+                <a href="auth.html#register" class="btn btn-register">Înregistrare</a>
+            </div>
+        `;
+    }
+}
 
 async function loadBrands() {
     try {
@@ -114,7 +119,7 @@ async function loadListings() {
                             </div>
                             <div class="card-footer">
                                 <a href="listing-details.html?id=${listing.id}" class="btn btn-primary">Vezi detalii</a>
-                                ${isLoggedIn ? `<button onclick="addToFavorites(${listing.id})" class="btn btn-outline-danger float-end">
+                                ${localStorage.getItem('isLoggedIn') === 'true' ? `<button onclick="addToFavorites(${listing.id})" class="btn btn-outline-danger float-end">
                                     <i class="bi bi-heart"></i>
                                 </button>` : ''}
                             </div>
@@ -130,9 +135,10 @@ async function loadListings() {
 
 function logout() {
     localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userId');
     localStorage.removeItem('username');
+    localStorage.removeItem('userId');
     localStorage.removeItem('email');
+    updateUserSection();
     window.location.href = 'auth.html';
 }
 

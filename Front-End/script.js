@@ -70,9 +70,81 @@ window.onclick = function(event) {
   }
 };
 
+// Funcția pentru schimbarea temei
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Actualizăm butonul
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    const text = themeToggle.querySelector('span');
+    
+    if (newTheme === 'dark') {
+        icon.className = 'fas fa-sun';
+        text.textContent = 'Light Mode';
+    } else {
+        icon.className = 'fas fa-moon';
+        text.textContent = 'Dark Mode';
+    }
+}
+
+// Inițializare temă
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        const text = themeToggle.querySelector('span');
+        
+        if (savedTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+            text.textContent = 'Light Mode';
+        }
+        
+        // Adăugăm event listener pentru click
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+}
+
+function updateUserSection() {
+    const userSection = document.getElementById('userSection');
+    if (!userSection) return;
+
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const username = localStorage.getItem('username');
+
+    if (isLoggedIn && username) {
+        userSection.innerHTML = `<button onclick="logout()" class="btn btn-danger btn-sm">Deconectare</button>`;
+    } else {
+        userSection.innerHTML = `
+            <div class="auth-buttons">
+                <a href="auth.html" class="btn btn-login">Autentificare</a>
+                <a href="auth.html#register" class="btn btn-register">Înregistrare</a>
+            </div>
+        `;
+    }
+}
+
+// Funcție pentru deconectare
 function logout() {
     localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userName');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    updateUserSection();
     window.location.href = 'auth.html';
 }
+
+// Inițializăm când se încarcă documentul
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing...');
+    initTheme();
+    updateUserSection();
+});
