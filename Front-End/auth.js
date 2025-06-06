@@ -84,15 +84,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('loginPassword').value;
 
         try {
-            const response = await fetch(`http://localhost/Practica/Back-end/api.php?action=login&username=${username}&password=${password}`, {
-                method: 'GET'
+            console.log('Încercare de autentificare...');
+            const response = await fetch(`http://localhost/Practica/Back-end/api.php?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            console.log('Status răspuns:', response.status);
+            const responseText = await response.text();
+            console.log('Răspuns brut:', responseText);
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Eroare la parsarea JSON:', e);
+                alert('Eroare la procesarea răspunsului de la server. Verificați consola pentru detalii.');
+                return;
             }
 
-            const data = await response.json();
             if (data.success) {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userId', data.user.id);
@@ -104,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(data.message || 'Username sau parolă incorecte!');
             }
         } catch (error) {
-            console.error('Eroare:', error);
-            alert('Eroare la autentificare! Verificați dacă serverul este pornit.');
+            console.error('Eroare completă:', error);
+            alert('Eroare la autentificare! Verificați dacă serverul este pornit și consola pentru mai multe detalii.');
         }
     });
 
@@ -124,26 +136,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             console.log('Încercare de înregistrare...');
+            const userData = {
+                username: username,
+                password: password,
+                email: email,
+                phone: phone
+            };
+            console.log('Date trimise:', userData);
+
             const response = await fetch('http://localhost/Practica/Back-end/api.php?action=register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    email: email,
-                    phone: phone
-                })
+                body: JSON.stringify(userData)
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            console.log('Status răspuns:', response.status);
+            const responseText = await response.text();
+            console.log('Răspuns brut:', responseText);
 
-            const data = await response.json();
-            console.log('Răspuns primit:', data);
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Eroare la parsarea JSON:', e);
+                alert('Eroare la procesarea răspunsului de la server. Verificați consola pentru detalii.');
+                return;
+            }
 
             if (data.success) {
                 alert('Înregistrare reușită! Vă puteți autentifica.');

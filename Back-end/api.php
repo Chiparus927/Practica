@@ -1,8 +1,8 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, Accept');
+header('Content-Type: application/json; charset=utf-8');
 
 // Activăm afișarea erorilor pentru debug
 error_reporting(E_ALL);
@@ -19,18 +19,18 @@ $username = 'root';
 $password = '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     error_log("Conexiune reușită la baza de date!");
 } catch(PDOException $e) {
     error_log("Eroare de conexiune la baza de date: " . $e->getMessage());
-    die(json_encode([
+    http_response_code(500);
+    echo json_encode([
         'success' => false, 
-        'message' => 'Conexiune eșuată: ' . $e->getMessage(),
-        'error_info' => $e->errorInfo,
-        'host' => $host,
-        'dbname' => $dbname
-    ]));
+        'message' => 'Eroare de conexiune la baza de date',
+        'error_details' => $e->getMessage()
+    ]);
+    exit;
 }
 
 // Funcție pentru login
@@ -38,63 +38,96 @@ function handleLogin($pdo) {
     $username = $_GET['username'] ?? '';
     $password = $_GET['password'] ?? '';
 
+    if (empty($username) || empty($password)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Username și parolă sunt obligatorii'
+        ]);
+        return;
+    }
+
     try {
-        $stmt = $pdo->prepare('SELECT id, username, email FROM users WHERE username = ? AND password = ?');
-        $stmt->execute([$username, $password]);
+        $stmt = $pdo->prepare('SELECT id, username, email, password FROM users WHERE username = ?');
+        $stmt->execute([$username]);
         
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo json_encode([
-                'success' => true,
-                'user' => [
-                    'id' => $row['id'],
-                    'username' => $row['username'],
-                    'email' => $row['email']
-                ]
-            ]);
+            if ($row['password'] === $password) {
+                echo json_encode([
+                    'success' => true,
+                    'user' => [
+                        'id' => $row['id'],
+                        'username' => $row['username'],
+                        'email' => $row['email']
+                    ]
+                ]);
+            } else {
+                http_response_code(401);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Parolă incorectă'
+                ]);
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Credențiale invalide']);
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Utilizatorul nu există'
+            ]);
         }
     } catch(PDOException $e) {
+        error_log("Eroare la autentificare: " . $e->getMessage());
+        http_response_code(500);
         echo json_encode([
-            'success' => false, 
-            'message' => 'Eroare la autentificare: ' . $e->getMessage(),
-            'error_info' => $e->errorInfo
+            'success' => false,
+            'message' => 'Eroare la autentificare',
+            'error_details' => $e->getMessage()
         ]);
     }
 }
 
 // Funcție pentru register
 function handleRegister($pdo) {
-    // Citim datele trimise
     $rawData = file_get_contents('php://input');
     error_log("Date primite raw: " . $rawData);
+    
     $data = json_decode($rawData, true);
-
-    // Debug - afișăm datele primite
     error_log("Date decodate: " . print_r($data, true));
 
-    // Verificăm dacă avem toate datele necesare
     if (!isset($data['username']) || !isset($data['password']) || !isset($data['email'])) {
+        http_response_code(400);
         echo json_encode([
-            'success' => false, 
-            'message' => 'Date incomplete',
-            'received_data' => $data,
-            'raw_data' => $rawData
+            'success' => false,
+            'message' => 'Toate câmpurile sunt obligatorii',
+            'received_data' => $data
         ]);
         return;
     }
 
-    $username = $data['username'];
-    $password = $data['password'];
-    $email = $data['email'];
-    $phone = $data['phone'] ?? null;
+    $username = trim($data['username']);
+    $password = trim($data['password']);
+    $email = trim($data['email']);
+    $phone = isset($data['phone']) ? trim($data['phone']) : null;
+
+    if (empty($username) || empty($password) || empty($email)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Toate câmpurile sunt obligatorii'
+        ]);
+        return;
+    }
 
     try {
         // Verificăm dacă username-ul există deja
         $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
-            echo json_encode(['success' => false, 'message' => 'Username-ul există deja!']);
+            http_response_code(409);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Username-ul există deja'
+            ]);
             return;
         }
 
@@ -102,49 +135,35 @@ function handleRegister($pdo) {
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
-            echo json_encode(['success' => false, 'message' => 'Email-ul există deja!']);
+            http_response_code(409);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Email-ul există deja'
+            ]);
             return;
         }
 
         // Inserăm utilizatorul nou
         $stmt = $pdo->prepare('INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)');
-        
-        error_log("Încercare inserare cu valorile: username=$username, email=$email, phone=$phone");
-        
-        if (!$stmt->execute([$username, $password, $email, $phone])) {
-            throw new PDOException("Eroare la execuția query-ului");
+        $result = $stmt->execute([$username, $password, $email, $phone]);
+
+        if ($result) {
+            $userId = $pdo->lastInsertId();
+            echo json_encode([
+                'success' => true,
+                'message' => 'Utilizator înregistrat cu succes',
+                'user_id' => $userId
+            ]);
+        } else {
+            throw new PDOException("Eroare la inserarea utilizatorului");
         }
-
-        $userId = $pdo->lastInsertId();
-        
-        // Verificăm dacă inserarea a reușit
-        if (!$userId) {
-            throw new PDOException("Nu s-a putut obține ID-ul utilizatorului nou");
-        }
-
-        echo json_encode([
-            'success' => true,
-            'message' => 'Utilizator înregistrat cu succes',
-            'user_id' => $userId
-        ]);
-
     } catch(PDOException $e) {
-        error_log("Eroare SQL detaliată: " . $e->getMessage());
-        error_log("Cod eroare: " . $e->getCode());
-        error_log("SQL State: " . $e->errorInfo[0]);
-        error_log("Driver error code: " . $e->errorInfo[1]);
-        error_log("Driver error message: " . $e->errorInfo[2]);
-        
+        error_log("Eroare la înregistrare: " . $e->getMessage());
+        http_response_code(500);
         echo json_encode([
             'success' => false,
-            'message' => 'Eroare la înregistrare: ' . $e->getMessage(),
-            'error_code' => $e->getCode(),
-            'error_info' => $e->errorInfo,
-            'debug_info' => [
-                'sql_state' => $e->errorInfo[0],
-                'driver_error_code' => $e->errorInfo[1],
-                'driver_error_message' => $e->errorInfo[2]
-            ]
+            'message' => 'Eroare la înregistrare',
+            'error_details' => $e->getMessage()
         ]);
     }
 }
@@ -229,6 +248,7 @@ switch($action) {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             handleLogin($pdo);
         } else {
+            http_response_code(405);
             echo json_encode([
                 'success' => false,
                 'message' => 'Metoda HTTP incorectă pentru login. Trebuie să fie GET.',
@@ -240,6 +260,7 @@ switch($action) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             handleRegister($pdo);
         } else {
+            http_response_code(405);
             echo json_encode([
                 'success' => false,
                 'message' => 'Metoda HTTP incorectă pentru register. Trebuie să fie POST.',
@@ -270,12 +291,13 @@ switch($action) {
         }
         break;
     default:
+        http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => 'Acțiune invalidă',
             'received_action' => $action,
             'request_method' => $_SERVER['REQUEST_METHOD'],
-            'available_actions' => ['login', 'register', 'get_listings', 'add_listing']
+            'available_actions' => ['login', 'register']
         ]);
 }
 

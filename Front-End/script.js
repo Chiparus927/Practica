@@ -366,3 +366,96 @@ function exportToJSON() {
         alert('A apărut o eroare la exportul JSON. Verificați consola pentru detalii.');
     }
 }
+
+// Funcție pentru obținerea tuturor taskurilor
+function getAllTasks() {
+    const tasks = [];
+    const taskElements = document.querySelectorAll('.task-item');
+    
+    taskElements.forEach(taskElement => {
+        const taskData = {
+            titlu: taskElement.querySelector('.task-title')?.textContent.trim() || '',
+            descriere: taskElement.querySelector('.task-description')?.textContent.trim() || '',
+            status: taskElement.querySelector('.task-status')?.textContent.trim() || '',
+            dataCreare: taskElement.querySelector('.task-date')?.textContent.trim() || '',
+            prioritate: taskElement.querySelector('.task-priority')?.textContent.trim() || ''
+        };
+        tasks.push(taskData);
+    });
+    
+    return tasks;
+}
+
+// Funcție pentru exportul în CSV
+function exportTasksToCSV() {
+    try {
+        console.log('Începe exportul taskurilor în CSV...');
+        const tasks = getAllTasks();
+        
+        if (tasks.length === 0) {
+            alert('Nu există taskuri de exportat!');
+            return;
+        }
+        
+        // Creăm headerul CSV
+        const headers = ['titlu', 'descriere', 'status', 'dataCreare', 'prioritate'];
+        let csvContent = headers.join(',') + '\n';
+        
+        // Adăugăm datele
+        tasks.forEach(task => {
+            const row = headers.map(header => {
+                const cell = (task[header] || '').toString().replace(/"/g, '""');
+                return `"${cell}"`;
+            });
+            csvContent += row.join(',') + '\n';
+        });
+        
+        // Creăm și descărcăm fișierul
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `taskuri_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        console.log('Export CSV finalizat cu succes!');
+    } catch (error) {
+        console.error('Eroare la exportul CSV:', error);
+        alert('A apărut o eroare la exportul CSV. Verificați consola pentru detalii.');
+    }
+}
+
+// Funcție pentru exportul în JSON
+function exportTasksToJSON() {
+    try {
+        console.log('Începe exportul taskurilor în JSON...');
+        const tasks = getAllTasks();
+        
+        if (tasks.length === 0) {
+            alert('Nu există taskuri de exportat!');
+            return;
+        }
+        
+        // Creăm și descărcăm fișierul JSON
+        const jsonContent = JSON.stringify(tasks, null, 2);
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `taskuri_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        console.log('Export JSON finalizat cu succes!');
+    } catch (error) {
+        console.error('Eroare la exportul JSON:', error);
+        alert('A apărut o eroare la exportul JSON. Verificați consola pentru detalii.');
+    }
+}
