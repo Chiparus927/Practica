@@ -1,5 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        if (savedTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+        }
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
     updateUserSection();
 
     // Încărcare mărci auto
@@ -10,23 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listeners
     const brandSelect = document.getElementById('brand');
-    brandSelect.addEventListener('change', loadModels);
+    if (brandSelect) {
+        brandSelect.addEventListener('change', loadModels);
+    }
 
     const filterForm = document.getElementById('filterForm');
-    filterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        loadListings();
-    });
+    if (filterForm) {
+        filterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loadListings();
+        });
+    }
 });
 
 function updateUserSection() {
     const userSection = document.getElementById('userSection');
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!userSection) return; // Dacă elementul nu există, ieșim din funcție
 
-    if (isLoggedIn) {
-        userSection.innerHTML = `
-            <button onclick="logout()" class="btn btn-danger btn-sm">Deconectare</button>
-        `;
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const username = localStorage.getItem('username');
+
+    if (isLoggedIn && username) {
+        userSection.innerHTML = `<button onclick="logout()" class="btn btn-danger btn-sm">Deconectare</button>`;
     } else {
         userSection.innerHTML = `
             <div class="auth-buttons">
@@ -169,5 +186,30 @@ async function addToFavorites(listingId) {
     } catch (error) {
         console.error('Eroare:', error);
         alert('Eroare la adăugarea la favorite!');
+    }
+}
+
+// Funcție pentru tema întunecată/luminoasă
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Actualizăm butonul
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        const text = themeToggle.querySelector('span');
+        
+        if (newTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+            text.textContent = 'Light Mode';
+        } else {
+            icon.className = 'fas fa-moon';
+            text.textContent = 'Dark Mode';
+        }
     }
 } 

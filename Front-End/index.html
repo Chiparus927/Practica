@@ -19,27 +19,37 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="index.html">Anunțuri</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="add-listing.html">Adaugă Anunț</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="favorites.html">Favorite</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Mesaje</a>
-          </li>
         </ul>
-        <div class="d-flex align-items-center">
-          <button type="button" id="themeToggle" class="theme-toggle me-3">
-            <i class="fas fa-moon"></i>
-            <span>Dark Mode</span>
-          </button>
-          <div id="userSection">
-            <!-- Completat dinamic prin JavaScript -->
+        <form id="filterForm" class="d-flex align-items-center me-3">
+          <select class="form-select form-select-sm me-2" id="brand" style="width: auto;">
+            <option value="">Toate mărcile</option>
+            <option value="Mercedes">Mercedes</option>
+            <option value="BMW">BMW</option>
+            <option value="Audi">Audi</option>
+            <option value="Porsche">Porsche</option>
+            <option value="Lexus">Lexus</option>
+            <option value="Jaguar">Jaguar</option>
+          </select>
+          <input type="number" class="form-control form-control-sm me-2" id="priceMin" placeholder="Preț min" style="width: 100px;">
+          <input type="number" class="form-control form-control-sm me-2" id="priceMax" placeholder="Preț max" style="width: 100px;">
+        </form>
+        <div class="d-flex align-items-center me-3">
+          <div class="dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Export
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+              <li><a class="dropdown-item" href="#" onclick="exportToCSV()">Export CSV</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportToJSON()">Export JSON</a></li>
+            </ul>
           </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <button id="themeToggle" class="btn btn-outline-light me-2">
+            <i class="fas fa-moon"></i>
+          </button>
+          <a href="auth.html" class="btn btn-outline-light me-2">Autentificare</a>
+          <a href="auth.html" class="btn btn-light">Înregistrare</a>
         </div>
       </div>
     </div>
@@ -47,46 +57,12 @@
 
   <div class="container mt-4">
     <div class="row">
-      <!-- Filtru -->
-      <div class="col-md-3">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Filtrare</h5>
-          </div>
-          <div class="card-body">
-            <form id="filterForm">
-              <div class="mb-3">
-                <label for="brand" class="form-label">Marca</label>
-                <select class="form-select" id="brand">
-                  <option value="">Toate mărcile</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="model" class="form-label">Model</label>
-                <select class="form-select" id="model">
-                  <option value="">Toate modelele</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="priceMin" class="form-label">Preț minim</label>
-                <input type="number" class="form-control" id="priceMin">
-              </div>
-              <div class="mb-3">
-                <label for="priceMax" class="form-label">Preț maxim</label>
-                <input type="number" class="form-control" id="priceMax">
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Filtrează</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
       <!-- Lista anunțuri -->
-      <div class="col-md-9">
+      <div class="col-12">
         <div class="row" id="listingsContainer">
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="photo_2025-05-26_11-38-23.jpg" class="card-img-top" alt="Mercedes">
+              <img src="https://i.gaw.to/vehicles/photos/34/45/344522-2020-mercedes-benz-gle.jpg?640x400" class="card-img-top" alt="Mercedes">  
               <div class="card-body">
                 <h5 class="card-title">Mercedes-Benz GLE350d</h5>
                 <div class="car-specs">
@@ -97,7 +73,7 @@
                   <p><strong>Cutie:</strong> Automată 9G-Tronic</p>
                   <p><strong>Combustibil:</strong> Diesel</p>
                 </div>
-                <p class="price">Preț: 19.999 €</p>
+                <p class="price">19.999 €</p>
               </div>
             </div>
           </div>
@@ -158,7 +134,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="photo_2025-05-26_11-36-27.jpg" class="card-img-top" alt="BMW">
+              <img src="https://images.topgear.com.ph/topgear/images/2019/04/02/bmw-x5-main-1554199808.jpg" class="card-img-top" alt="BMW"> 
               <div class="card-body">
                 <h5 class="card-title">BMW X5 xDrive30d</h5>
                 <div class="car-specs">
@@ -176,7 +152,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="photo_2025-05-26_11-43-36.jpg" class="card-img-top" alt="BMW">
+              <img src="https://a.d-cd.net/42zA409l5fkOLfJUs5-wVS8YAg4-1920.jpg" class="card-img-top" alt="BMW">
               <div class="card-body">
                 <h5 class="card-title">BMW 540i G30 M Paket</h5>
                 <div class="car-specs">
@@ -206,7 +182,7 @@
                   <p><strong>Cutie:</strong> Automată M Steptronic</p>
                   <p><strong>Combustibil:</strong> Benzina</p>
                 </div>
-                <p class="price">Preț: 95.000 €</p>
+                <p class="price">Preț: 95.000 €</p> 
               </div>
             </div>
           </div>
@@ -226,13 +202,13 @@
                   <p><strong>Combustibil:</strong> Hibrid</p>
                 </div>
                 <p class="price">Preț: 110.000 €</p>
-              </div>
+                </div>
             </div>
           </div>
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/2019_BMW_740Li_Automatic_facelift_3.0.jpg/1200px-2019_BMW_740Li_Automatic_facelift_3.0.jpg" class="card-img-top" alt="BMW">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsFfMkSp2WIfOlqr52tFDfFCVcq9-7lnH4Eg&s" class="card-img-top" alt="BMW">
               <div class="card-body">
                 <h5 class="card-title">BMW 7 Series</h5>
                 <div class="car-specs">
@@ -250,7 +226,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsFfMkSp2WIfOlqr52tFDfFCVcq9-7lnH4Eg&s" class="card-img-top" alt="Audi">
+              <img src="https://media.ed.edmunds-media.com/audi/q7/2019/oem/2019_audi_q7_4dr-suv_30-tfsi-prestige-quattro_fq_oem_1_1600.jpg" class="card-img-top" alt="Audi">
               <div class="card-body">
                 <h5 class="card-title">Audi Q7 3.0 TDI</h5>
                 <div class="car-specs">
@@ -286,7 +262,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://prod.pictures.autoscout24.net/listing-images/316e9e32-c9f0-4d44-80f1-e9a203beb252_78d7cb3b-86fc-4524-8a5a-46fd5405b2f9.jpg" class="card-img-top" alt="Audi">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGJVOx2a1ta_5zbe7SQZT2P92TYAe0UJQXWA&s" class="card-img-top" alt="Audi">
               <div class="card-body">
                 <h5 class="card-title">Audi R8 V10</h5>
                 <div class="car-specs">
@@ -304,7 +280,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjGoP0LriQPi6vgBsL3oZO54cYVlursb5hTw&s" class="card-img-top" alt="Audi">
+              <img src="https://hips.hearstapps.com/hmg-prod/images/2022-audi-rs-e-tron-gt-109-1615819912.jpg" class="card-img-top" alt="Audi">
               <div class="card-body">
                 <h5 class="card-title">Audi e-tron GT</h5>
                 <div class="car-specs">
@@ -322,7 +298,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEDrX83rZqXxQnhq_DHIhFaT0TsmbasgeCA&s" class="card-img-top" alt="Audi">
+              <img src="https://media.ed.edmunds-media.com/audi/a8/2021/oem/2021_audi_a8_sedan_l_fq_oem_1_1600.jpg" class="card-img-top" alt="Audi">
               <div class="card-body">
                 <h5 class="card-title">Audi A8 L</h5>
                 <div class="car-specs">
@@ -394,7 +370,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/06/c/h/car_7123353x1riuepndoydyrkouzj3.jpeg" class="card-img-top" alt="VW">
+              <img src="https://www.edmunds.com/assets/m/volkswagen/id4/2021/oem/2021_volkswagen_id4_4dr-suv_awd-pro-s-statement_fq_oem_1_600.jpg" class="card-img-top" alt="VW">
               <div class="card-body">
                 <h5 class="card-title">Volkswagen ID.4</h5>
                 <div class="car-specs">
@@ -412,7 +388,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/10/e/r/car_44755r1hnehcnvh14b4i84d75nce.jpg" class="card-img-top" alt="VW">
+              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/06/c/h/car_7123353x1riuepndoydyrkouzj3.jpeg" class="card-img-top" alt="VW">
               <div class="card-body">
                 <h5 class="card-title">Volkswagen Golf R</h5>
                 <div class="car-specs">
@@ -432,52 +408,16 @@
             <div class="card">
               <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/02/u/d/car_22167567rn2x4xp6i37rdmvkgmd5.jpg" class="card-img-top" alt="Porsche">
               <div class="card-body">
-                <h5 class="card-title">Porsche 911 Turbo S</h5>
-                <div class="car-specs">
-                  <p><strong>Motor:</strong> 3.8L Benzina</p>
-                  <p><strong>Putere:</strong> 650 CP</p>
-                  <p><strong>An:</strong> 2022</p>
-                  <p><strong>Kilometraj:</strong> 8.000 km</p>
-                  <p><strong>Cutie:</strong> Automată PDK</p>
-                  <p><strong>Combustibil:</strong> Benzina</p>
-                </div>
-                <p class="price">Preț: 90.000 €</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-4">
-            <div class="card">
-              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/10/x/q/car_62097vx5h8p3rxzi56njdon47sh7.jpg" class="card-img-top" alt="Porsche">
-              <div class="card-body">
                 <h5 class="card-title">Porsche Cayenne</h5>
                 <div class="car-specs">
-                  <p><strong>Motor:</strong> 3.0L V6</p>
-                  <p><strong>Putere:</strong> 340 CP</p>
-                  <p><strong>An:</strong> 2021</p>
-                  <p><strong>Kilometraj:</strong> 28.000 km</p>
-                  <p><strong>Cutie:</strong> Automată Tiptronic</p>
-                  <p><strong>Combustibil:</strong> Benzina</p>
+                  <p><span><strong>Motor:</strong> 3.0L V6 Turbo</span></p>
+                  <p><span><strong>Putere:</strong> 340 CP</span></p>
+                  <p><span><strong>An:</strong> 2022</span></p>
+                  <p><span><strong>Kilometraj:</strong> 25.000 km</span></p>
+                  <p><span><strong>Cutie:</strong> Automată Tiptronic S</span></p>
+                  <p><span><strong>Combustibil:</strong> Benzină</span></p>
                 </div>
-                <p class="price">Preț: 85.000 €</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-4">
-            <div class="card">
-              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2023/12/x/o/car_6517639754qukq9upvzlc8qf3aa.jpeg" class="card-img-top" alt="Porsche">
-              <div class="card-body">
-                <h5 class="card-title">Porsche Taycan</h5>
-                <div class="car-specs">
-                  <p><strong>Motor:</strong> Electric Dual Motor</p>
-                  <p><strong>Putere:</strong> 476 CP</p>
-                  <p><strong>An:</strong> 2022</p>
-                  <p><strong>Kilometraj:</strong> 12.000 km</p>
-                  <p><strong>Cutie:</strong> Automată</p>
-                  <p><strong>Combustibil:</strong> Electric</p>
-                </div>
-                <p class="price">Preț: 95.000 €</p>
+                <p class="price">Preț:85.000 €</p>
               </div>
             </div>
           </div>
@@ -488,14 +428,32 @@
               <div class="card-body">
                 <h5 class="card-title">Porsche Panamera</h5>
                 <div class="car-specs">
-                  <p><strong>Motor:</strong> 2.9L V6</p>
-                  <p><strong>Putere:</strong> 330 CP</p>
-                  <p><strong>An:</strong> 2021</p>
-                  <p><strong>Kilometraj:</strong> 22.000 km</p>
-                  <p><strong>Cutie:</strong> Automată PDK</p>
-                  <p><strong>Combustibil:</strong> Benzina</p>
+                  <p><span><strong>Motor:</strong> 2.9L V6 Biturbo</span></p>
+                  <p><span><strong>Putere:</strong> 440 CP</span></p>
+                  <p><span><strong>An:</strong> 2022</span></p>
+                  <p><span><strong>Kilometraj:</strong> 18.000 km</span></p>
+                  <p><span><strong>Cutie:</strong> Automată PDK</span></p>
+                  <p><span><strong>Combustibil:</strong> Benzină</span></p>
                 </div>
-                <p class="price">Preț: 100.000 €</p>
+                <p class="price">Preț:95.000 €</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <img src="https://696e7465726175746f.ultracdn.net/wp-content/uploads/2024/02/u/d/car_22167567rn2x4xp6i37rdmvkgmd5.jpg" class="card-img-top" alt="Porsche">
+              <div class="card-body">
+                <h5 class="card-title">Porsche 911 Turbo S</h5>
+                <div class="car-specs">
+                  <p><span><strong>Motor:</strong> 3.8L Boxer Biturbo</span></p>
+                  <p><span><strong>Putere:</strong> 650 CP</span></p>
+                  <p><span><strong>An:</strong> 2023</span></p>
+                  <p><span><strong>Kilometraj:</strong> 8.000 km</span></p>
+                  <p><span><strong>Cutie:</strong> Automată PDK</span></p>
+                  <p><span><strong>Combustibil:</strong> Benzină</span></p>
+                </div>
+                <p class="price">Preț:190.000 €</p>
               </div>
             </div>
           </div>
@@ -538,7 +496,7 @@
 
           <div class="col-md-4 mb-4">
             <div class="card">
-              <img src="https://frankfurt.apollo.olxcdn.com/v1/files/nnux0fg8ttlj3-RO/image;s=1360x1360" class="card-img-top" alt="Lexus">
+              <img src="https://dvizhok.su/i/files2/auto/2021/01/Lexus_LC_500_2021_Inspiration-Series_2.jpg" class="card-img-top" alt="Lexus">
               <div class="card-body">
                 <h5 class="card-title">Lexus LC 500</h5>
                 <div class="car-specs">
@@ -622,6 +580,7 @@
                   <p><strong>Combustibil:</strong> Diesel</p>
                 </div>
                 <p class="price">Preț: 52.000 €</p>
+
               </div>
             </div>
           </div>
@@ -640,6 +599,9 @@
                   <p><strong>Combustibil:</strong> Benzina</p>
                 </div>
                 <p class="price">Preț: 75.000 €</p>
+
+                </div>
+           
               </div>
             </div>
           </div>
@@ -650,6 +612,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
-  <script src="main.js"></script>
 </body>
 </html>
