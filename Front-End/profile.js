@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Date trimise:', formData);
 
             try {
-                const response = await fetch('http://localhost/Practica/Back-end/api.php?action=update_user_profile', {
+                const response = await fetch('http://localhost/Practica/Back-end/api.php?action=update_profile', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -238,6 +238,82 @@ function handleAddListing($pdo) {
     }
 }
 
+// Funcție pentru actualizarea profilului
+function handleUpdateProfile($pdo) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    if (!isset($data['id']) || !isset($data['username']) || !isset($data['email'])) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Date incomplete pentru actualizarea profilului'
+        ]);
+        return;
+    }
+
+    try {
+        // Verificăm dacă username-ul există deja pentru alt utilizator
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? AND id != ?');
+        $stmt->execute([$data['username'], $data['id']]);
+        if ($stmt->fetch()) {
+            http_response_code(409);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Username-ul există deja'
+            ]);
+            return;
+        }
+
+        // Verificăm dacă email-ul există deja pentru alt utilizator
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? AND id != ?');
+        $stmt->execute([$data['email'], $data['id']]);
+        if ($stmt->fetch()) {
+            http_response_code(409);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Email-ul există deja'
+            ]);
+            return;
+        }
+
+        // Verificăm parola curentă dacă se schimbă parola
+        if (!empty($data['currentPassword']) && !empty($data['newPassword'])) {
+            $stmt = $pdo->prepare('SELECT password FROM users WHERE id = ?');
+            $stmt->execute([$data['id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($user['password'] !== $data['currentPassword']) {
+                http_response_code(401);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Parola curentă este incorectă'
+                ]);
+                return;
+            }
+            
+            // Actualizăm cu noua parolă
+            $stmt = $pdo->prepare('UPDATE users SET username = ?, email = ?, phone = ?, password = ? WHERE id = ?');
+            $stmt->execute([$data['username'], $data['email'], $data['phone'], $data['newPassword'], $data['id']]);
+        } else {
+            // Actualizăm fără a schimba parola
+            $stmt = $pdo->prepare('UPDATE users SET username = ?, email = ?, phone = ? WHERE id = ?');
+            $stmt->execute([$data['username'], $data['email'], $data['phone'], $data['id']]);
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Profil actualizat cu succes'
+        ]);
+    } catch(PDOException $e) {
+        error_log("Eroare la actualizarea profilului: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Eroare la actualizarea profilului'
+        ]);
+    }
+}
+
 // Router pentru cereri
 $action = $_GET['action'] ?? '';
 
@@ -290,6 +366,18 @@ switch($action) {
             ]);
         }
         break;
+    case 'update_profile':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            handleUpdateProfile($pdo);
+        } else {
+            http_response_code(405);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Metoda HTTP incorectă pentru update_profile. Trebuie să fie POST.',
+                'method_received' => $_SERVER['REQUEST_METHOD']
+            ]);
+        }
+        break;
     default:
         http_response_code(400);
         echo json_encode([
@@ -297,7 +385,7 @@ switch($action) {
             'message' => 'Acțiune invalidă',
             'received_action' => $action,
             'request_method' => $_SERVER['REQUEST_METHOD'],
-            'available_actions' => ['login', 'register']
+            'available_actions' => ['login', 'register', 'get_listings', 'add_listing', 'update_profile']
         ]);
 }
 
