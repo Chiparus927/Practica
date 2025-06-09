@@ -2,7 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100px;
+    max-width: 100px;
     background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
     padding: 20px;
     gap: 40px;
@@ -13,7 +14,7 @@
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-    width: 400px;
+    width: 40px;
     border: 1px solid #333;
 }
 
