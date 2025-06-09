@@ -96,11 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Autentificare reușită!');
                 window.location.href = 'index.html';
             } else {
-                alert(data.message || 'Username sau parolă incorecte!');
+                alert(data.message || 'Nume de utilizator sau parolă incorectă!');
             }
         } catch (error) {
-            console.error('Eroare completă:', error);
-            alert('Eroare la autentificare!');
+            console.error('Eroare la autentificare:', error);
+            alert('A apărut o eroare la autentificare!');
         }
     });
 

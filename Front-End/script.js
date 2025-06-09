@@ -259,14 +259,17 @@ function updateUserSection() {
             </div>
         `;
     } else {
-        userSection.innerHTML = ''; // Remove authentication buttons when not logged in
+        // Ascundem butoanele de autentificare când utilizatorul nu este logat
+        userSection.innerHTML = '';
     }
 }
 
 function logout() {
+    // Ștergem datele de autentificare
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('currentUser');
-    window.location.href = 'auth.html'; // Redirect to auth page after logout
+    // Redirecționăm către pagina de autentificare
+    window.location.href = 'auth.html';
 }
 
 // Funcții pentru export
