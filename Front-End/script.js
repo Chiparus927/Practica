@@ -120,7 +120,17 @@ document.addEventListener('DOMContentLoaded', function() {
         priceMax.addEventListener('input', filterCards);
     }
 
-    // Inițializare user section
+    // Verificăm starea de autentificare
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            // Dacă nu avem datele utilizatorului, deconectăm
+            logout();
+        }
+    }
+    
+    // Actualizăm secțiunea utilizatorului
     updateUserSection();
 
     // Adăugăm event listeners pentru butoanele de export
@@ -234,15 +244,25 @@ function updateUserSection() {
     if (!userSection) return;
 
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const username = localStorage.getItem('username');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (isLoggedIn && username) {
-        userSection.innerHTML = `<button onclick="logout()" class="btn btn-danger btn-sm">Deconectare</button>`;
+    if (isLoggedIn && currentUser) {
+        userSection.innerHTML = `
+            <div class="d-flex align-items-center">
+                <span class="text-light me-3">Bun venit, ${currentUser.username}!</span>
+                <a href="profile.html" class="btn btn-outline-light me-2">
+                    <i class="fas fa-user"></i> Profil
+                </a>
+                <button onclick="logout()" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Deconectare
+                </button>
+            </div>
+        `;
     } else {
         userSection.innerHTML = `
-            <div class="auth-buttons">
-                <a href="auth.html" class="btn btn-login">Autentificare</a>
-                <a href="auth.html#register" class="btn btn-register">Înregistrare</a>
+            <div class="d-flex align-items-center">
+                <a href="auth.html" class="btn btn-outline-light me-2">Autentificare</a>
+                <a href="auth.html#register" class="btn btn-light">Înregistrare</a>
             </div>
         `;
     }
@@ -250,11 +270,9 @@ function updateUserSection() {
 
 function logout() {
     localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('email');
+    localStorage.removeItem('currentUser');
     updateUserSection();
-    window.location.href = 'auth.html';
+    window.location.href = 'index.html';
 }
 
 // Funcții pentru export
