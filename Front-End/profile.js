@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileForm) {
         profileForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            console.log('Formular trimis');
             
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (!currentUser) {
@@ -114,6 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 newPassword: document.getElementById('newPassword').value
             };
 
+            console.log('Date trimise:', formData);
+
             try {
                 const response = await fetch('http://localhost/Practica/Back-end/api.php?action=updateProfile', {
                     method: 'POST',
@@ -124,7 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(formData)
                 });
 
+                console.log('Răspuns primit:', response);
+
                 const data = await response.json();
+                console.log('Date primite:', data);
 
                 if (data.success) {
                     // Actualizăm datele utilizatorului în localStorage
@@ -146,12 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     alert('Profilul a fost actualizat cu succes!');
+                    window.location.reload(); // Reîncarcă pagina pentru a afișa noile date
                 } else {
                     alert(data.message || 'Eroare la actualizarea profilului!');
                 }
             } catch (error) {
                 console.error('Eroare la actualizarea profilului:', error);
-                alert('Eroare la actualizarea profilului!');
+                alert('Eroare la actualizarea profilului! Vă rugăm să încercați din nou.');
             }
         });
     }

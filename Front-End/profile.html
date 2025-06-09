@@ -44,26 +44,26 @@
                         <h4 class="mb-0">Profil Utilizator</h4>
                     </div>
                     <div class="card-body">
-                        <form id="profileForm">
+                        <form id="profileForm" method="POST">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Nume utilizator</label>
-                                <input type="text" class="form-control" id="username" required>
+                                <input type="text" class="form-control" id="username" name="username" required>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" required>
+                                <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Telefon</label>
-                                <input type="tel" class="form-control" id="phone">
+                                <input type="tel" class="form-control" id="phone" name="phone">
                             </div>
                             <div class="mb-3">
                                 <label for="currentPassword" class="form-label">Parola curentă</label>
-                                <input type="password" class="form-control" id="currentPassword">
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
                             </div>
                             <div class="mb-3">
                                 <label for="newPassword" class="form-label">Parola nouă</label>
-                                <input type="password" class="form-control" id="newPassword">
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
                                 <div class="password-requirements mt-2">
                                     <p class="requirement" data-requirement="length">
                                         <i class="fas fa-times"></i> Minim 6 caractere
@@ -78,7 +78,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="confirmPassword" class="form-label">Confirmă parola nouă</label>
-                                <input type="password" class="form-control" id="confirmPassword">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
                                 <div class="password-requirements mt-2">
                                     <p class="requirement" data-requirement="match">
                                         <i class="fas fa-times"></i> Parolele trebuie să coincidă
