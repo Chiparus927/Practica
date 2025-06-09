@@ -131,4 +131,67 @@
         width: 100%;
         max-width: 400px;
     }
+}
+
+.password-requirements {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.requirement {
+    margin: 5px 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.requirement i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+}
+
+.requirement.valid {
+    color: #28a745;
+}
+
+.requirement.invalid {
+    color: #dc3545;
+}
+
+.requirement.valid i {
+    color: #28a745;
+}
+
+.requirement.invalid i {
+    color: #dc3545;
+}
+
+#saveButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
 } 

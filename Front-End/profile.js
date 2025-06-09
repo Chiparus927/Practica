@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirm = confirmPassword.value;
         let isValid = true;
 
+        // Validare lungime
         const lengthReq = document.querySelector('[data-requirement="length"]');
         if (password.length >= 6) {
             lengthReq.classList.remove('invalid');
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
+        // Validare literă
         const letterReq = document.querySelector('[data-requirement="letter"]');
         if (/[a-zA-Z]/.test(password)) {
             letterReq.classList.remove('invalid');
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
+        // Validare număr
         const numberReq = document.querySelector('[data-requirement="number"]');
         if (/[0-9]/.test(password)) {
             numberReq.classList.remove('invalid');
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
+        // Validare coincidență parole
         const matchReq = document.querySelector('[data-requirement="match"]');
         if (password && confirm && password === confirm) {
             matchReq.classList.remove('invalid');
@@ -58,12 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        saveButton.disabled = !isValid;
+        // Activăm/dezactivăm butonul de salvare
+        if (newPassword.value || confirmPassword.value) {
+            saveButton.disabled = !isValid;
+        } else {
+            saveButton.disabled = false;
+        }
     }
 
     // Adăugăm event listeners pentru validare
-    newPassword.addEventListener('input', validatePassword);
-    confirmPassword.addEventListener('input', validatePassword);
+    if (newPassword) {
+        newPassword.addEventListener('input', validatePassword);
+    }
+    if (confirmPassword) {
+        confirmPassword.addEventListener('input', validatePassword);
+    }
 
     // Funcție pentru încărcarea datelor utilizatorului
     function loadUserData() {
@@ -82,57 +95,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Funcție pentru salvarea modificărilor profilului
-    profileForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
-            window.location.href = 'auth.html';
-            return;
-        }
-
-        const formData = {
-            id: currentUser.id,
-            username: document.getElementById('username').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            currentPassword: document.getElementById('currentPassword').value,
-            newPassword: document.getElementById('newPassword').value
-        };
-
-        try {
-            const response = await fetch('http://localhost/Practica/Back-end/api.php?action=updateProfile', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Actualizăm datele utilizatorului în localStorage
-                currentUser.username = formData.username;
-                currentUser.email = formData.email;
-                currentUser.phone = formData.phone;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-                // Resetează câmpurile de parolă
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
-
-                alert('Profilul a fost actualizat cu succes!');
-            } else {
-                alert(data.message || 'Eroare la actualizarea profilului!');
+    if (profileForm) {
+        profileForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'auth.html';
+                return;
             }
-        } catch (error) {
-            console.error('Eroare la actualizarea profilului:', error);
-            alert('Eroare la actualizarea profilului!');
-        }
-    });
+
+            const formData = {
+                id: currentUser.id,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                currentPassword: document.getElementById('currentPassword').value,
+                newPassword: document.getElementById('newPassword').value
+            };
+
+            try {
+                const response = await fetch('http://localhost/Practica/Back-end/api.php?action=updateProfile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Actualizăm datele utilizatorului în localStorage
+                    currentUser.username = formData.username;
+                    currentUser.email = formData.email;
+                    currentUser.phone = formData.phone;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                    // Resetează câmpurile de parolă
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+
+                    // Resetează validările
+                    const requirements = document.querySelectorAll('.requirement');
+                    requirements.forEach(req => {
+                        req.classList.remove('valid', 'invalid');
+                        req.querySelector('i').className = 'fas fa-times';
+                    });
+
+                    alert('Profilul a fost actualizat cu succes!');
+                } else {
+                    alert(data.message || 'Eroare la actualizarea profilului!');
+                }
+            } catch (error) {
+                console.error('Eroare la actualizarea profilului:', error);
+                alert('Eroare la actualizarea profilului!');
+            }
+        });
+    }
 
     // Funcție pentru deconectare
     function logout() {
