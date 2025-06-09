@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 alert('Autentificare reușită!');
-                window.location.href = 'profile.html';
+                window.location.href = 'index.html';
             } else {
                 alert(data.message || 'Username sau parolă incorecte!');
             }

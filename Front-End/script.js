@@ -259,20 +259,14 @@ function updateUserSection() {
             </div>
         `;
     } else {
-        userSection.innerHTML = `
-            <div class="d-flex align-items-center">
-                <a href="auth.html" class="btn btn-outline-light me-2">Autentificare</a>
-                <a href="auth.html#register" class="btn btn-light">Înregistrare</a>
-            </div>
-        `;
+        userSection.innerHTML = ''; // Remove authentication buttons when not logged in
     }
 }
 
 function logout() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('currentUser');
-    updateUserSection();
-    window.location.href = 'index.html';
+    window.location.href = 'auth.html'; // Redirect to auth page after logout
 }
 
 // Funcții pentru export
