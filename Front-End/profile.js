@@ -12,57 +12,6 @@ function loadUserData() {
     document.getElementById('username').value = currentUser.username || '';
     document.getElementById('email').value = currentUser.email || '';
     document.getElementById('phone').value = currentUser.phone || '';
-
-    // Încarcă anunțurile utilizatorului
-    loadUserListings(currentUser.id);
-}
-
-// Funcție pentru încărcarea anunțurilor utilizatorului
-async function loadUserListings(userId) {
-    try {
-        const response = await fetch(`http://localhost/Practica/Back-end/api.php?action=getUserListings&userId=${userId}`, {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' }
-        });
-
-        const data = await response.json();
-        const listingsContainer = document.getElementById('userListings');
-        listingsContainer.innerHTML = '';
-
-        if (!data.success || data.listings.length === 0) {
-            listingsContainer.innerHTML = '<p class="text-muted">Nu aveți niciun anunț publicat.</p>';
-            return;
-        }
-
-        data.listings.forEach(listing => {
-            const listingElement = document.createElement('div');
-            listingElement.className = 'card mb-3';
-            listingElement.innerHTML = `
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title">${listing.marca} ${listing.model}</h5>
-                        <div>
-                            <button class="btn btn-sm btn-primary me-2" onclick="editListing(${listing.id})">
-                                <i class="fas fa-edit"></i> Editează
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteListing(${listing.id})">
-                                <i class="fas fa-trash"></i> Șterge
-                            </button>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                        <strong>Preț:</strong> ${listing.pret} €<br>
-                        <strong>An:</strong> ${listing.an}<br>
-                        <strong>Kilometraj:</strong> ${listing.kilometraj} km
-                    </p>
-                </div>
-            `;
-            listingsContainer.appendChild(listingElement);
-        });
-    } catch (error) {
-        console.error('Eroare la încărcarea anunțurilor:', error);
-        document.getElementById('userListings').innerHTML = '<p class="text-danger">Eroare la încărcarea anunțurilor.</p>';
-    }
 }
 
 // Funcție pentru salvarea modificărilor profilului
@@ -118,42 +67,11 @@ document.getElementById('profileForm').addEventListener('submit', async function
     }
 });
 
-// Funcție pentru editarea unui anunț
-function editListing(listingId) {
-    window.location.href = `index.html?edit=${listingId}`;
-}
-
-// Funcție pentru ștergerea unui anunț
-async function deleteListing(listingId) {
-    if (!confirm('Sigur doriți să ștergeți acest anunț?')) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`http://localhost/Practica/Back-end/api.php?action=deleteListing&listingId=${listingId}`, {
-            method: 'DELETE',
-            headers: { 'Accept': 'application/json' }
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            loadUserListings(currentUser.id);
-        } else {
-            alert(data.message || 'Eroare la ștergerea anunțului!');
-        }
-    } catch (error) {
-        console.error('Eroare la ștergerea anunțului:', error);
-        alert('Eroare la ștergerea anunțului!');
-    }
-}
-
 // Funcție pentru deconectare
 function logout() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('currentUser');
-    window.location.href = 'index.html';
+    window.location.href = 'auth.html';
 }
 
 // Funcție pentru schimbarea temei

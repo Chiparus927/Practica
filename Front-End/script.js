@@ -249,7 +249,6 @@ function updateUserSection() {
     if (isLoggedIn && currentUser) {
         userSection.innerHTML = `
             <div class="d-flex align-items-center">
-                <span class="text-light me-3">Bun venit, ${currentUser.username}!</span>
                 <a href="profile.html" class="btn btn-outline-light me-2">
                     <i class="fas fa-user"></i> Profil
                 </a>
@@ -259,7 +258,6 @@ function updateUserSection() {
             </div>
         `;
     } else {
-        // Ascundem butoanele de autentificare când utilizatorul nu este logat
         userSection.innerHTML = '';
     }
 }
